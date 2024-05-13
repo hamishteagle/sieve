@@ -14,27 +14,23 @@ fn rust_methods(_py: Python, m: &PyModule) -> PyResult<()> {
 #[pyfunction]
 #[pyo3(text_signature = "(up_to,/)")]
 fn sieve_rust(up_to: i64) -> PyResult<Vec<i64>> {
-    Ok(sieve(&up_to))
+    Ok(sieve(up_to))
 }
 
-pub fn sieve(&up_to: &i64) -> Vec<i64> {
-    //Starting lowest prime = 2
-    let mut prime_index: usize = 0;
-    // Put all values up to the target value in the initial vector
-    let mut primes = Vec::from_iter(2..up_to);
+pub fn sieve(up_to: i64) -> Vec<i64> {
+    let mut is_prime = vec![true; (up_to + 1) as usize];
+    let mut primes = Vec::new();
 
-    while prime_index < primes.len() {
-        let mut composite = primes[prime_index];
-        while composite < up_to {
-            composite += primes[prime_index];
-            if primes.contains(&composite) {
-                let index = primes.iter().position(|x| *x == composite).unwrap();
-                primes.remove(index);
+    for num in 2..=up_to {
+        if is_prime[num as usize] {
+            primes.push(num);
+            let mut multiple = num * 2;
+            while multiple <= up_to {
+                is_prime[multiple as usize] = false;
+                multiple += num;
             }
         }
-        prime_index += 1;
     }
-    {
-        primes
-    }
+
+    primes
 }

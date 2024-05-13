@@ -1,13 +1,13 @@
-def sieve(up_to: int) -> list:
-    primes = list(range(2, up_to))
-    prime_index = 0
+def sieve(up_to):
+    is_prime = [True] * (up_to + 1)
+    primes = []
 
-    while prime_index < len(primes):
-        composite = primes[prime_index]
-        while composite < up_to:
-            composite += primes[prime_index]
-            if composite in primes:
-                primes.remove(composite)
+    for num in range(2, up_to + 1):
+        if is_prime[num]:
+            primes.append(num)
+            multiple = num * 2
+            while multiple <= up_to:
+                is_prime[multiple] = False
+                multiple += num
 
-        prime_index += 1
     return primes
